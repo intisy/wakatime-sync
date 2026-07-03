@@ -289,6 +289,25 @@ export function extractFileChanges(
 }
 
 /**
+ * Resolve a tracked entity to an absolute file path, or null when it isn't a real
+ * file on disk. opencode tool metadata occasionally yields a label rather than a
+ * path (e.g. the read tool's title "workspace") or a path relative to a project
+ * folder that resolved to "/". Relative entries are resolved against projectFolder.
+ */
+export function resolveEntityFile(
+  file: string,
+  projectFolder: string,
+): string | null {
+  if (!file) return null;
+  const entity = path.isAbsolute(file) ? file : path.resolve(projectFolder, file);
+  try {
+    return fs.statSync(entity).isFile() ? entity : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Process and send heartbeats for tracked file changes.
  * When force is true, awaits all heartbeats to ensure they complete before shutdown.
  */
@@ -312,8 +331,16 @@ async function processHeartbeat(
 
   for (const [file, info] of fileChanges.entries()) {
     const lineChanges = info.additions - info.deletions;
+    // Skip anything that isn't a real file on disk (see resolveEntityFile):
+    // wakatime-cli exits non-zero on an --entity-type=file that doesn't exist,
+    // surfacing a scary "wakatime-cli error" for activity we can't attribute.
+    const entity = resolveEntityFile(file, projectFolder);
+    if (!entity) {
+      logger.debug(`Skipping heartbeat for non-file entity: ${file}`);
+      continue;
+    }
     const promise = sendHeartbeat({
-      entity: file,
+      entity,
       projectFolder,
       lineChanges,
       category: "ai coding",

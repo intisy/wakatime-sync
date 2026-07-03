@@ -1,5 +1,8 @@
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { extractFileChanges } from "../index.js";
+import { extractFileChanges, resolveEntityFile } from "../index.js";
 
 describe("extractFileChanges", () => {
   describe("edit tool", () => {
@@ -286,5 +289,35 @@ describe("extractFileChanges", () => {
 
       expect(result).toEqual([]);
     });
+  });
+});
+
+describe("resolveEntityFile", () => {
+  const dir = mkdtempSync(join(tmpdir(), "wakatime-entity-"));
+  const realFile = join(dir, "real.ts");
+  writeFileSync(realFile, "export const x = 1;\n");
+
+  it("returns the absolute path for a real absolute file", () => {
+    expect(resolveEntityFile(realFile, dir)).toBe(realFile);
+  });
+
+  it("resolves a relative entity against the project folder", () => {
+    expect(resolveEntityFile("real.ts", dir)).toBe(realFile);
+  });
+
+  it("returns null for a non-file label like the read tool's 'workspace' title", () => {
+    expect(resolveEntityFile("workspace", "/")).toBeNull();
+  });
+
+  it("returns null for a non-existent path", () => {
+    expect(resolveEntityFile(join(dir, "nope.ts"), dir)).toBeNull();
+  });
+
+  it("returns null for a directory", () => {
+    expect(resolveEntityFile(dir, dir)).toBeNull();
+  });
+
+  it("returns null for an empty entity", () => {
+    expect(resolveEntityFile("", dir)).toBeNull();
   });
 });
