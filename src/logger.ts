@@ -8,10 +8,8 @@ export enum LogLevel {
 }
 
 /**
- * File-first logger shared by both apps. Lines go to the standard
- * `<configDir>/logs/...` file via writeLog (toggled by config.logging).
- * It never writes to stdout — Claude Code parses hook stdout — so only
- * errors are mirrored to stderr.
+ * File-first logger shared by both apps. Never writes to stdout — Claude Code
+ * parses hook stdout — only errors mirror to stderr (via writeLog).
  */
 export class Logger {
   private level: LogLevel = LogLevel.INFO;
@@ -48,7 +46,6 @@ export class Logger {
     if (level < this.level) return;
     const isError = level >= LogLevel.ERROR;
     writeLog(`[${LogLevel[level]}] ${msg}`, isError);
-    if (isError) console.error(msg);
   }
 }
 

@@ -95,9 +95,6 @@ if (isClaude) {
   import("./claude/hook.js").then((m) => m.runClaudeHook());
 }
 
-/**
- * Type definitions for OpenCode SDK event parts
- */
 interface ToolStateCompleted {
   status: "completed";
   input: Record<string, unknown>;
@@ -132,9 +129,6 @@ function isMessagePartUpdatedEvent(event: {
 
 const processedCallIds = new Set<string>();
 
-/**
- * Represents tracked changes for a single file
- */
 export interface FileChangeInfo {
   additions: number;
   deletions: number;
@@ -149,9 +143,6 @@ const OPENCODE_VERSION_CACHE = path.join(
   "opencode-version-cache.json",
 );
 
-/**
- * FileDiff structure from opencode's edit tool
- */
 interface FileDiff {
   file: string;
   before: string;
@@ -307,10 +298,7 @@ export function resolveEntityFile(
   }
 }
 
-/**
- * Process and send heartbeats for tracked file changes.
- * When force is true, awaits all heartbeats to ensure they complete before shutdown.
- */
+// When force is true, awaits all heartbeats to complete before shutdown.
 async function processHeartbeat(
   projectFolder: string,
   opencodeVersion: string,
@@ -370,9 +358,6 @@ async function processHeartbeat(
   }
 }
 
-/**
- * Update tracked file changes
- */
 function trackFileChange(file: string, info: Partial<FileChangeInfo>): void {
   const existing = fileChanges.get(file) ?? {
     additions: 0,

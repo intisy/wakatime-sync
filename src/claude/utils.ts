@@ -21,11 +21,11 @@ function timestamp(): number {
   return Date.now() / 1000;
 }
 
-export function isWindows(): boolean {
+function isWindows(): boolean {
   return os.platform() === "win32";
 }
 
-export function getHomeDirectory(): string {
+function getHomeDirectory(): string {
   const home = process.env.WAKATIME_HOME;
   if (home && home.trim() && fs.existsSync(home.trim())) return home.trim();
   return process.env[isWindows() ? "USERPROFILE" : "HOME"] || process.cwd();

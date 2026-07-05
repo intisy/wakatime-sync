@@ -2,7 +2,6 @@
 // every plugin uses one config + logging system. Public API kept stable for logger.ts.
 import {
   getAppConfigDir,
-  isLoggingEnabled as coreIsLoggingEnabled,
   loadConfig,
   defineConfig,
   makeWriteLog,
@@ -39,10 +38,6 @@ export function getPluginConfig(
   configDir: string = getAppConfigDir(),
 ): Record<string, unknown> {
   return loadConfig(PACKAGE_NAME, configDir) as Record<string, unknown>;
-}
-
-export function isLoggingEnabled(): boolean {
-  return coreIsLoggingEnabled(PACKAGE_NAME);
 }
 
 export const writeLog = makeWriteLog(PACKAGE_NAME);

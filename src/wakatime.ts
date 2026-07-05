@@ -137,10 +137,3 @@ export function syncAiActivity(params: SyncActivityParams): Promise<void> {
 
   return runCli(args);
 }
-
-export function isCliAvailable(): boolean {
-  return (
-    dependencies.isCliInstalled() ||
-    dependencies.getCliLocationGlobal() !== undefined
-  );
-}
