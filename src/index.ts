@@ -1,7 +1,12 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { Hooks, Plugin } from "@opencode-ai/plugin";
-import { deployCommands, defineReadme, maybeRunReadmeCli } from "../core/src/index.js";
+import {
+  deployCommands,
+  defineReadme,
+  isClaude as coreIsClaude,
+  maybeRunReadmeCli,
+} from "../core/src/index.js";
 import { LogLevel, logger } from "./logger.js";
 import { WAKATIME_COMMANDS, maybeRunCli } from "./commands.js";
 import {
@@ -90,7 +95,7 @@ try {
   /* command deploy is best-effort — never block the plugin */
 }
 
-const isClaude = process.argv.join(" ").includes("claude");
+const isClaude = coreIsClaude();
 if (isClaude) {
   import("./claude/hook.js").then((m) => m.runClaudeHook());
 }

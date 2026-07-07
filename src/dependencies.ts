@@ -4,6 +4,7 @@ import { createWriteStream } from "node:fs";
 import * as https from "node:https";
 import * as os from "node:os";
 import * as path from "node:path";
+import { ensureDir, readJson, writeJson } from "../core/src/index.js";
 import { getPluginConfig } from "./config.js";
 import { logger } from "./logger.js";
 import { getWakatimeResourcesDir } from "./wakatime-paths.js";
@@ -81,20 +82,12 @@ export class Dependencies {
   }
 
   private readState(): CliState {
-    try {
-      if (fs.existsSync(this.stateFile)) {
-        return JSON.parse(fs.readFileSync(this.stateFile, "utf-8"));
-      }
-    } catch {
-      /* ignore unreadable state */
-    }
-    return {};
+    return readJson(this.stateFile, {}) as CliState;
   }
 
   private writeState(state: CliState): void {
     try {
-      fs.mkdirSync(path.dirname(this.stateFile), { recursive: true });
-      fs.writeFileSync(this.stateFile, JSON.stringify(state, null, 2));
+      writeJson(this.stateFile, state);
     } catch {
       /* never crash on state write failure */
     }
@@ -208,7 +201,7 @@ export class Dependencies {
     );
 
     try {
-      fs.mkdirSync(this.resourcesLocation, { recursive: true });
+      ensureDir(this.resourcesLocation);
 
       logger.debug(`Downloading wakatime-cli from ${zipUrl}`);
       await this.downloadFile(zipUrl, zipFile);

@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
+import { readJson } from "../../core/src/index.js";
 import { logger } from "../logger.js";
 import { getPluginConfig } from "../config.js";
 import type { Input, State, TranscriptLog } from "./types.js";
@@ -54,8 +55,7 @@ export function shouldSendHeartbeat(inp?: Input): boolean {
 
   try {
     const last =
-      (JSON.parse(fs.readFileSync(getStateFile(inp), "utf-8")) as State)
-        .lastHeartbeatAt ?? timestamp();
+      (readJson(getStateFile(inp)) as State).lastHeartbeatAt ?? timestamp();
     const intervalSeconds = Number(getPluginConfig().heartbeat_interval_seconds ?? 60);
     return timestamp() - last >= intervalSeconds;
   } catch {
