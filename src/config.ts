@@ -4,6 +4,7 @@ import {
   getAppConfigDir,
   loadConfig,
   defineConfig,
+  defineCapabilities,
   makeWriteLog,
 } from "../core/src/index.js";
 
@@ -30,6 +31,20 @@ defineConfig(PACKAGE_NAME, {
   hostname: "",
   // When true, sets hide_project_names = true in ~/.wakatime.cfg [settings] on activation.
   hide_project_names: false,
+});
+
+defineCapabilities(PACKAGE_NAME, {
+  fields: [
+    { key: "logging", type: "boolean", label: "Logging", description: "Write this plugin's log file.", group: "General" },
+    { key: "api_key", type: "secret", label: "API key", description: "Written into ~/.wakatime.cfg on activation.", group: "WakaTime account", placeholder: "waka_..." },
+    { key: "api_url", type: "string", label: "API URL", group: "WakaTime account" },
+    { key: "heartbeat_interval_seconds", type: "number", label: "Heartbeat interval (s)", description: "Minimum seconds between heartbeats per project.", min: 1, group: "Heartbeats" },
+    { key: "cli_update_interval_hours", type: "number", label: "CLI update check (h)", min: 1, group: "Updates" },
+    { key: "proxy", type: "string", label: "Proxy", description: "Written into ~/.wakatime.cfg proxy.", group: "Network" },
+    { key: "hostname", type: "string", label: "Hostname", group: "Network" },
+    { key: "hide_filenames", type: "boolean", label: "Hide filenames", group: "Privacy" },
+    { key: "hide_project_names", type: "boolean", label: "Hide project names", group: "Privacy" },
+  ],
 });
 
 export { getAppConfigDir };
