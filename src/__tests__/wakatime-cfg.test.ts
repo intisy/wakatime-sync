@@ -58,6 +58,11 @@ function setupEnv(initialCfg?: string): void {
   }
 
   vi.stubEnv("WAKATIME_HOME", wakatimeHome);
+  // HUB_CONFIG_DIR names the home outright. Naming it only per app
+  // (HUB_OPENCODE_DIR) resolves through the app registry, so on a machine with no
+  // registry the plugin config is looked for somewhere else entirely and nothing is
+  // written.
+  vi.stubEnv("HUB_CONFIG_DIR", pluginHome);
   vi.stubEnv("HUB_OPENCODE_DIR", pluginHome);
   vi.stubEnv("CORE_APP", "opencode");
 }
