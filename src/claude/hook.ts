@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import { withHookCause } from "../activity.js";
 import { ensureCliInstalled, syncAiActivity } from "../wakatime.js";
 import { getWakatimeConfigFilePath } from "../wakatime-paths.js";
 import { applyPluginConfigToWakatimeCfg } from "../wakatime-cfg.js";
@@ -33,15 +34,17 @@ export async function runClaudeHook(): Promise<void> {
   try {
     if (input) logger.debug(JSON.stringify(input));
 
-    await ensureCliInstalled();
+    await withHookCause("claude hook", async () => {
+      await ensureCliInstalled();
 
-    if (shouldSendHeartbeat(input)) {
-      await syncAiActivity({
-        projectFolder: input?.cwd,
-        claudeVersion: await getClaudeVersion(input),
-      });
-      await updateState(input);
-    }
+      if (shouldSendHeartbeat(input)) {
+        await syncAiActivity({
+          projectFolder: input?.cwd,
+          claudeVersion: await getClaudeVersion(input),
+        });
+        await updateState(input);
+      }
+    });
   } catch (err) {
     logger.errorException(err);
   }

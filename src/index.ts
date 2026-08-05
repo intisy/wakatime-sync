@@ -7,6 +7,7 @@ import {
   isClaude as coreIsClaude,
   maybeRunReadmeCli,
 } from "../core/src/index.js";
+import { emitHeartbeats, withHookCause } from "./activity.js";
 import { LogLevel, logger } from "./logger.js";
 import { WAKATIME_COMMANDS, maybeRunCli } from "./commands.js";
 import {
@@ -321,6 +322,8 @@ async function processHeartbeat(
   }
 
   const heartbeatPromises: Promise<void>[] = [];
+  let sentCount = 0;
+  let sentLineChanges = 0;
 
   for (const [file, info] of fileChanges.entries()) {
     const lineChanges = info.additions - info.deletions;
@@ -346,6 +349,8 @@ async function processHeartbeat(
       heartbeatPromises.push(promise);
     }
 
+    sentCount += 1;
+    sentLineChanges += lineChanges;
     logger.debug(
       `Sent heartbeat for ${file}: +${info.additions}/-${info.deletions} lines`,
     );
@@ -353,6 +358,7 @@ async function processHeartbeat(
 
   fileChanges.clear();
   updateLastHeartbeat();
+  if (sentCount > 0) emitHeartbeats(sentCount, sentLineChanges);
 
   if (force && heartbeatPromises.length > 0) {
     logger.debug(
@@ -379,7 +385,7 @@ function trackFileChange(file: string, info: Partial<FileChangeInfo>): void {
   });
 }
 
-export const plugin: Plugin = async (ctx) => {
+const activatePlugin: Plugin = async (ctx) => {
   // Read debug setting from ~/.wakatime.cfg (or $WAKATIME_HOME/.wakatime.cfg)
   const wakatimeCfgPath = getWakatimeConfigFilePath();
   try {
@@ -454,7 +460,9 @@ export const plugin: Plugin = async (ctx) => {
       logger.debug("Chat message received");
 
       if (fileChanges.size > 0) {
-        await processHeartbeat(projectFolder, opencodeVersion, opencodeClient);
+        await withHookCause("chat.message", () =>
+          processHeartbeat(projectFolder, opencodeVersion, opencodeClient),
+        );
       }
     },
 
@@ -508,17 +516,16 @@ export const plugin: Plugin = async (ctx) => {
         }
 
         if (changes.length > 0) {
-          await processHeartbeat(projectFolder, opencodeVersion, opencodeClient);
+          await withHookCause("tool completed", () =>
+            processHeartbeat(projectFolder, opencodeVersion, opencodeClient),
+          );
         }
       }
 
       if (event.type === "session.deleted" || event.type === "session.idle") {
         logger.debug(`Session event: ${event.type} - sending final heartbeat`);
-        await processHeartbeat(
-          projectFolder,
-          opencodeVersion,
-          opencodeClient,
-          true,
+        await withHookCause(event.type, () =>
+          processHeartbeat(projectFolder, opencodeVersion, opencodeClient, true),
         );
       }
     },
@@ -526,5 +533,9 @@ export const plugin: Plugin = async (ctx) => {
 
   return hooks;
 };
+
+// A hook scope only covers the work awaited inside it, never a handler the host
+// calls later, so activation and each emitting handler get their own.
+export const plugin: Plugin = async (ctx) => withHookCause("plugin activate", () => activatePlugin(ctx));
 
 export default plugin;

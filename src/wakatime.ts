@@ -1,5 +1,6 @@
 import { type ExecFileOptions, execFile } from "node:child_process";
 import * as os from "node:os";
+import { emitSyncFailed } from "./activity.js";
 import { dependencies } from "./dependencies.js";
 import { logger } from "./logger.js";
 import { getVersion } from "./version.js";
@@ -78,6 +79,7 @@ function runCli(args: string[]): Promise<void> {
       }
       if (error) {
         logger.error(`wakatime-cli error: ${error.message}`);
+        emitSyncFailed(error.message);
       }
       resolve();
     });

@@ -5,6 +5,7 @@ import * as https from "node:https";
 import * as os from "node:os";
 import * as path from "node:path";
 import { ensureDir, readJson, writeJson } from "../core/src/index.js";
+import { emitCliInstalled } from "./activity.js";
 import { getPluginConfig } from "./config.js";
 import { logger } from "./logger.js";
 import { getWakatimeResourcesDir } from "./wakatime-paths.js";
@@ -146,6 +147,7 @@ export class Dependencies {
     if (!this.isCliInstalled()) {
       logger.info("wakatime-cli not found, downloading...");
       await this.installCli();
+      emitCliInstalled(null);
       return;
     }
 
@@ -158,6 +160,7 @@ export class Dependencies {
         logger.info(`Updating wakatime-cli to ${latestVersion}...`);
         await this.installCli();
         this.writeState({ lastChecked: Date.now(), version: latestVersion });
+        emitCliInstalled(latestVersion);
       } else {
         this.writeState({ ...state, lastChecked: Date.now() });
       }
