@@ -6,7 +6,7 @@ import {
   defineConfig,
   defineCapabilities,
   makeWriteLog,
-} from "../core/src/index.js";
+} from "@intisy-ai/core";
 
 const PACKAGE_NAME = "wakatime-sync";
 

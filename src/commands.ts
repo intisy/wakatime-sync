@@ -4,7 +4,7 @@
 // no separate artifact to ship — maybeRunCli runs the action and the process exits.
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { configCommand, runConfigCli, type CommandDef } from "../core/src/index.js";
+import { configCommand, runConfigCli, type CommandDef } from "@intisy-ai/core";
 import { dependencies } from "./dependencies.js";
 
 export const WAKATIME_COMMANDS: CommandDef[] = [

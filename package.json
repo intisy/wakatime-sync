@@ -1,6 +1,6 @@
 {
   "name": "wakatime-sync",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "WakaTime plugin for OpenCode and Claude Code, automatically tracking time spent coding.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,5 +39,8 @@
     "esbuild": "^0.25.12",
     "typescript": "^5.4.0",
     "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "@intisy-ai/core": "file:core"
   }
 }
