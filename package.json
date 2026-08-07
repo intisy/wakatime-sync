@@ -1,6 +1,6 @@
 {
   "name": "wakatime-sync",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "WakaTime plugin for OpenCode and Claude Code, automatically tracking time spent coding.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,10 +28,11 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "tsc --noEmit && node build.mjs",
+    "build": "npm run build:deps && tsc --noEmit && node build.mjs",
     "postbuild": "node dist/index.js readme",
     "test": "npm run build && vitest run",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "build:deps": "npm --prefix core install && npm --prefix core run build"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "^0.15.30",
