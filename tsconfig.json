@@ -7,7 +7,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    // The library is compiled from the submodule, not installed, so the specifier
+    // is mapped to the built output it resolves to at runtime.
+    "paths": { "@intisy-ai/core": ["./core/dist/index.d.ts"] }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "src/**/__tests__/**"]

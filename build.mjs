@@ -1,7 +1,7 @@
-// Bundle the dual-app entry into a SINGLE self-contained ESM file. OpenCode
-// deploys plugins as one file (plugin/<name>.js), so sibling modules must be
-// inlined; the version is inlined via define. @opencode-ai/plugin is type-only,
-// kept external.
+// Bundle the dual-app entry into one ESM file, since OpenCode deploys a plugin as
+// a single plugin/<name>.js. Shared libraries stay external: plugin-updater
+// materialises them under plugin/node_modules, so every plugin in a home runs one
+// copy instead of carrying its own. @opencode-ai/plugin is type-only.
 import { readFileSync } from "node:fs";
 import { build } from "esbuild";
 
@@ -14,7 +14,7 @@ await build({
   format: "esm",
   target: "node20",
   outfile: "dist/index.js",
-  external: ["@opencode-ai/plugin"],
+  external: ["@opencode-ai/plugin", "@intisy-ai/core"],
   define: { __WAKATIME_VERSION__: JSON.stringify(pkg.version) },
   logLevel: "info",
 });

@@ -6,7 +6,7 @@ import {
   defineReadme,
   isClaude as coreIsClaude,
   maybeRunReadmeCli,
-} from "../core/src/index.js";
+} from "@intisy-ai/core";
 import { emitHeartbeats, withHookCause } from "./activity.js";
 import { LogLevel, logger } from "./logger.js";
 import { WAKATIME_COMMANDS, maybeRunCli } from "./commands.js";
