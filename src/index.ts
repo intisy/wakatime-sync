@@ -538,4 +538,7 @@ const activatePlugin: Plugin = async (ctx) => {
 // calls later, so activation and each emitting handler get their own.
 export const plugin: Plugin = async (ctx) => withHookCause("plugin activate", () => activatePlugin(ctx));
 
-export default plugin;
+// What an in-process host loads. `plugin` above stays exported for OpenCode, which invokes every
+// exported function as a hook, and Claude Code reaches this bundle as a process rather than an
+// import.
+export { default } from "./plugin.js";
