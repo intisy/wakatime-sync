@@ -96,8 +96,14 @@ try {
   /* command deploy is best-effort — never block the plugin */
 }
 
-const isClaude = coreIsClaude();
-if (isClaude) {
+// A host that imports this bundle for its capabilities says so in the environment. The Claude hook
+// reads the process's stdin synchronously, which in a loader TUI is the terminal the user is typing
+// into, so an announced host gets the capabilities and never the hook. The generic key is the
+// contract; the vendor-named one is still read for a host deployed before that key existed.
+const importedByHost = process.env.INTISY_PLUGIN_LIBRARY_MODE === "1"
+  || process.env.PLUGIN_UPDATER_LIBRARY_MODE === "1";
+
+if (coreIsClaude() && !importedByHost) {
   import("./claude/hook.js").then((m) => m.runClaudeHook());
 }
 
