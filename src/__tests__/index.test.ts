@@ -323,10 +323,8 @@ describe("resolveEntityFile", () => {
 });
 
 describe("host-imported entry", () => {
-  it("does not run the Claude hook when a host announces itself in the environment", async () => {
+  it("guards the Claude hook behind shouldRunClaudeHook", () => {
     const source = readFileSync(new URL("../index.ts", import.meta.url), "utf-8");
-    const branch = source.slice(source.indexOf("./claude/hook.js") - 400, source.indexOf("./claude/hook.js"));
-    expect(branch).toContain("INTISY_PLUGIN_LIBRARY_MODE");
-    expect(branch).toContain("PLUGIN_UPDATER_LIBRARY_MODE");
+    expect(source).toContain("if (shouldRunClaudeHook(coreIsClaude())) {");
   });
 });
