@@ -1,7 +1,6 @@
 import { createSettingsCapability } from "@intisy-ai/core";
 import type { ActionResult, Plugin, PluginContext, SettingsCapability } from "@intisy-ai/api";
 // Registers this plugin's config defaults and its settings declaration, which schema() reads back.
-// A host imports this module without ever evaluating the entry's app-specific side effects.
 import "./config.js";
 
 const PLUGIN_ID = "wakatime-sync";
