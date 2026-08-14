@@ -17,6 +17,14 @@ describe("importedByHost", () => {
   it("is false for a value other than 1, so an unset-but-present key does not count", () => {
     expect(importedByHost({ INTISY_PLUGIN_LIBRARY_MODE: "0", PLUGIN_UPDATER_LIBRARY_MODE: "" })).toBe(false);
   });
+
+  it("is true for the generic activation key", () => {
+    expect(importedByHost({ INTISY_PLUGIN_ACTIVATION: "1" })).toBe(true);
+  });
+
+  it("is true for the vendor-named activation key", () => {
+    expect(importedByHost({ PLUGIN_UPDATER_ACTIVATION: "1" })).toBe(true);
+  });
 });
 
 describe("shouldRunClaudeHook", () => {
@@ -30,5 +38,9 @@ describe("shouldRunClaudeHook", () => {
 
   it("does not run the hook when the app is not Claude Code", () => {
     expect(shouldRunClaudeHook(false, {})).toBe(false);
+  });
+
+  it("does not run the hook while a host is mid-activation", () => {
+    expect(shouldRunClaudeHook(true, { INTISY_PLUGIN_ACTIVATION: "1" })).toBe(false);
   });
 });

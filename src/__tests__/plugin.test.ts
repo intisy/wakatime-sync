@@ -3,13 +3,10 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { validateManifest } from "../../core/api/dist/index.js";
-import plugin from "../plugin.js";
 import type { CapabilitySchema, PluginContext, SettingsCapability } from "../../core/api/dist/index.js";
 
 const manifest = JSON.parse(readFileSync(new URL("../../plugin.json", import.meta.url), "utf-8"));
 
-// Nothing here writes today, but this plugin's config and logging resolve the ambient home, so the
-// home is pinned rather than left to whatever machine runs the suite.
 let ambient: string;
 
 beforeEach(() => {
@@ -22,6 +19,18 @@ afterEach(() => {
   vi.unstubAllEnvs();
   rmSync(ambient, { recursive: true, force: true });
 });
+
+/**
+ * Re-imports the plugin after the home is pinned.
+ *
+ * @remarks
+ * `src/config.ts` binds its logger to the ambient app home at import time, so a static import would
+ * bind it before `beforeEach` pins `HUB_CONFIG_DIR`.
+ */
+async function load() {
+  vi.resetModules();
+  return (await import("../plugin.js")).default;
+}
 
 function fakeContext(): { context: PluginContext; provided: Map<string, unknown> } {
   const provided = new Map<string, unknown>();
@@ -47,7 +56,8 @@ describe("plugin.json", () => {
     expect(manifest.id).toBe("wakatime-sync");
   });
 
-  it("declares exactly the capabilities activate provides", () => {
+  it("declares exactly the capabilities activate provides", async () => {
+    const plugin = await load();
     const { context, provided } = fakeContext();
     plugin.activate(context);
     expect([...provided.keys()].sort()).toEqual([...manifest.capabilities].sort());
@@ -55,14 +65,15 @@ describe("plugin.json", () => {
 });
 
 describe("the settings capability", () => {
-  function settings(): SettingsCapability {
+  async function settings(): Promise<SettingsCapability> {
+    const plugin = await load();
     const { context, provided } = fakeContext();
     plugin.activate(context);
     return provided.get("settings") as SettingsCapability;
   }
 
   it("answers with the fields src/config.ts declares", async () => {
-    const schema = (await settings().schema()) as CapabilitySchema;
+    const schema = (await (await settings()).schema()) as CapabilitySchema;
     expect(schema.fields?.map((field) => field.key)).toEqual([
       "logging",
       "api_key",
@@ -77,17 +88,17 @@ describe("the settings capability", () => {
   });
 
   it("marks the API key as a secret so a surface masks it", async () => {
-    const schema = (await settings().schema()) as CapabilitySchema;
+    const schema = (await (await settings()).schema()) as CapabilitySchema;
     expect(schema.fields?.find((field) => field.key === "api_key")?.type).toBe("secret");
   });
 
   it("declares no actions, because every CLI action of this plugin writes to stdout", async () => {
-    const schema = (await settings().schema()) as CapabilitySchema;
+    const schema = (await (await settings()).schema()) as CapabilitySchema;
     expect(schema.actions).toBeUndefined();
   });
 
   it("refuses an action by name instead of throwing", async () => {
-    expect(await settings().run("today")).toEqual({
+    expect(await (await settings()).run("today")).toEqual({
       ok: false,
       message: 'wakatime-sync declares no action "today"',
     });
