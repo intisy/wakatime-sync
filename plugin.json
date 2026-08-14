@@ -1,0 +1,13 @@
+{
+  "$schema": "./core/api/schema/plugin.schema.json",
+  "id": "wakatime-sync",
+  "api": 1,
+  "entry": "dist/index.js",
+  "displayName": "WakaTime",
+  "capabilities": ["settings"],
+  "repo": {
+    "role": "WakaTime coding-activity tracking plugin",
+    "category": "plugin",
+    "tech": "typescript"
+  }
+}
