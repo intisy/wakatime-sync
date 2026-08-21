@@ -325,6 +325,6 @@ describe("resolveEntityFile", () => {
 describe("host-imported entry", () => {
   it("guards the Claude hook behind shouldRunClaudeHook", () => {
     const source = readFileSync(new URL("../index.ts", import.meta.url), "utf-8");
-    expect(source).toContain("if (shouldRunClaudeHook(coreIsClaude())) {");
+    expect(source).toContain('if (shouldRunClaudeHook(getApp() === "claude")) {');
   });
 });

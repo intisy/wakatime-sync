@@ -4,7 +4,7 @@ import type { Hooks, Plugin } from "@opencode-ai/plugin";
 import {
   deployCommands,
   defineReadme,
-  isClaude as coreIsClaude,
+  getApp,
   maybeRunReadmeCli,
 } from "@intisy-ai/core";
 import { emitHeartbeats, withHookCause } from "./activity.js";
@@ -105,7 +105,7 @@ try {
   /* command deploy is best-effort — never block the plugin */
 }
 
-if (shouldRunClaudeHook(coreIsClaude())) {
+if (shouldRunClaudeHook(getApp() === "claude")) {
   import("./claude/hook.js").then((m) => m.runClaudeHook());
 }
 

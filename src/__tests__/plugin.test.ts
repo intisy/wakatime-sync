@@ -2,8 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { validateManifest } from "../../core/api/dist/index.js";
-import type { CapabilitySchema, PluginContext, SettingsCapability } from "../../core/api/dist/index.js";
+import { validateManifest } from "../../core/api/generated/engine.js";
+import type { PluginContext } from "../../core/api/generated/api.js";
+import type { CapabilitySchema, SettingsCapability } from "@intisy-ai/core";
 
 const manifest = JSON.parse(readFileSync(new URL("../../plugin.json", import.meta.url), "utf-8"));
 
@@ -42,7 +43,10 @@ function fakeContext(): { context: PluginContext; provided: Map<string, unknown>
     paths: { home: "/home", repos: "/home/repos", plugin: "/home/plugin", cache: "/home/cache", config: "/home/config" },
     services: { register: vi.fn(), get: vi.fn(), want: vi.fn(), watch: vi.fn() },
     events: { publish: vi.fn(), subscribe: vi.fn() },
-    provide: (id: string, implementation: unknown) => { provided.set(id, implementation); },
+    // Keyed by id, not by the argument, because a typed key is an object and the host records the id.
+    provide: (key: string | { id: string }, implementation: unknown) => {
+      provided.set(typeof key === "string" ? key : key.id, implementation);
+    },
   } as unknown as PluginContext;
   return { context, provided };
 }
