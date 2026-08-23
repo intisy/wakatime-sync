@@ -8,7 +8,7 @@ runPluginContract({
   entry: "dist/index.js",
   configName: "wakatime-sync",
   app: "both",
-  commands: ["wakatime", "wakatime-sync-config"],
+  commands: ["wakatime"],
   deploy: "load",
   actions: [["today"]],
   readme: true,

@@ -116,7 +116,6 @@ Config file: `<configDir>/config/wakatime-sync.json` (edit via the loader or `/w
 
 | Command | Description | Arguments |
 | --- | --- | --- |
-| `/wakatime-sync-config` | View and change wakatime-sync configuration | `list | get <key> | set <key> <value>` |
 | `/wakatime` | Show today's WakaTime coding activity |  |
 
 ## Dependencies
