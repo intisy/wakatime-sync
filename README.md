@@ -84,7 +84,7 @@ Get your key at https://wakatime.com/settings/api-key.
 
 ## Configuration
 
-Config file: `<configDir>/config/wakatime-sync.json` (edit via the loader or `/wakatime-sync-config set`).
+Config file: `<configDir>/config/wakatime-sync.json` (edit it directly, or through whatever settings surface the app offers).
 
 ```json
 {

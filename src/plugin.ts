@@ -1,8 +1,6 @@
-import { createSettingsCapability, SETTINGS } from "@intisy-ai/core";
 import type { Plugin, PluginContext } from "@intisy-ai/api";
-import type { ActionResult, SettingsCapability } from "@intisy-ai/core";
-// Registers this plugin's config defaults and its settings declaration, which schema() reads back.
-import "./config.js";
+import type { SettingsCapability } from "@intisy-ai/core";
+import { WAKATIME_SETTINGS } from "./config.js";
 
 const PLUGIN_ID = "wakatime-sync";
 
@@ -15,16 +13,16 @@ const PLUGIN_ID = "wakatime-sync";
  * refused by name.
  */
 export function wakatimeSettings(): SettingsCapability {
-  return createSettingsCapability(PLUGIN_ID, (actionId: string): ActionResult => ({
-    ok: false,
-    message: `${PLUGIN_ID} declares no action "${actionId}"`,
-  }));
+  return {
+    schema: () => WAKATIME_SETTINGS,
+    run: async (actionId: string) => ({ ok: false, message: `${PLUGIN_ID} declares no action "${actionId}"` }),
+  };
 }
 
 /** What an in-process host loads: the api plugin this bundle's default export carries. */
 const plugin: Plugin = {
   activate(context: PluginContext) {
-    context.provide(SETTINGS, wakatimeSettings());
+    context.provide(context.capability<SettingsCapability>("settings"), wakatimeSettings());
   },
   deactivate() {},
 };

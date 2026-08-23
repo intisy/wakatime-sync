@@ -3,7 +3,6 @@
 // artifact to ship: maybeRunCli runs the action and the process exits.
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { runConfigCli } from "@intisy-ai/core";
 import { dependencies } from "./dependencies.js";
 
 // Print today's tracked time via the installed wakatime-cli (`--today`).
@@ -24,12 +23,8 @@ function runToday(): Promise<void> {
 
 // If invoked as `node <bundle> <action>`, run that action and return true so the
 // entry exits. Returns false on a normal plugin load (no recognized action).
-export async function maybeRunCli(pluginName: string): Promise<boolean> {
+export async function maybeRunCli(): Promise<boolean> {
   const argv = process.argv.slice(2);
-  if (argv[0] === "config") {
-    runConfigCli(pluginName, argv.slice(1));
-    return true;
-  }
   if (argv[0] === "today") {
     await runToday();
     return true;

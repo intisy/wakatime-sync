@@ -91,7 +91,7 @@ defineReadme({
  * exit, so command/config invocations never start the plugin or the hook.
  */
 if (maybeRunReadmeCli("wakatime-sync")) process.exit(0);
-if (await maybeRunCli("wakatime-sync")) {
+if (await maybeRunCli()) {
   process.exit(0);
 }
 

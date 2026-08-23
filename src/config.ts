@@ -1,15 +1,13 @@
 // wakatime-sync config + logging — delegated to the shared core library so
 // every plugin uses one config + logging system. Public API kept stable for logger.ts.
-import {
-  getAppConfigDir,
-  loadConfig,
-  defineCapabilities,
-  makeWriteLog,
-} from "@intisy-ai/core";
+import { getAppConfigDir, loadConfig, makeWriteLog } from "@intisy-ai/core";
+import type { CapabilitySchema } from "@intisy-ai/core";
 
 const PACKAGE_NAME = "wakatime-sync";
 
-defineCapabilities(PACKAGE_NAME, {
+// What each setting is called and how a surface renders it, beside the values the manifest
+// declares. Data the settings capability answers with.
+export const WAKATIME_SETTINGS: CapabilitySchema = {
   fields: [
     { key: "logging", type: "boolean", label: "Logging", description: "Write this plugin's log file.", group: "General" },
     { key: "api_key", type: "secret", label: "API key", description: "Written into ~/.wakatime.cfg on activation.", group: "WakaTime account", placeholder: "waka_..." },
@@ -21,7 +19,7 @@ defineCapabilities(PACKAGE_NAME, {
     { key: "hide_filenames", type: "boolean", label: "Hide filenames", group: "Privacy" },
     { key: "hide_project_names", type: "boolean", label: "Hide project names", group: "Privacy" },
   ],
-});
+};
 
 export { getAppConfigDir };
 
