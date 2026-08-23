@@ -1,21 +1,10 @@
-// Cross-app slash-commands for wakatime-sync (deployed to both opencode and
-// Claude Code by core's deployCommands) plus the CLI actions behind them. The
-// commands shell into this same bundle (`node <bundle> <action>`), so there is
-// no separate artifact to ship — maybeRunCli runs the action and the process exits.
+// The CLI actions behind this plugin's slash commands, which the manifest declares and a host
+// deploys. They shell into this same bundle (`node <bundle> <action>`), so there is no separate
+// artifact to ship: maybeRunCli runs the action and the process exits.
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { configCommand, runConfigCli, type CommandDef } from "@intisy-ai/core";
+import { runConfigCli } from "@intisy-ai/core";
 import { dependencies } from "./dependencies.js";
-
-export const WAKATIME_COMMANDS: CommandDef[] = [
-  configCommand("wakatime-sync"),
-  {
-    name: "wakatime",
-    description: "Show today's WakaTime coding activity",
-    shell: 'node "{{BUNDLE}}" today',
-    body: "Above is today's WakaTime coding total. Report it to the user concisely.",
-  },
-];
 
 // Print today's tracked time via the installed wakatime-cli (`--today`).
 function runToday(): Promise<void> {
