@@ -1,6 +1,6 @@
 import type { Plugin, PluginContext } from "@intisy-ai/api";
 import type { SettingsCapability } from "@intisy-ai/core";
-import { WAKATIME_SETTINGS } from "./config.js";
+import { WAKATIME_SETTINGS } from "./settings.js";
 
 const PLUGIN_ID = "wakatime-sync";
 
