@@ -5,7 +5,7 @@ import { describe, it, expect, afterEach } from "vitest";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readActivity } from "../../core/src/index.js";
+import { readActivity } from "@intisy-ai/core";
 import { emitHeartbeats, emitSyncFailed, emitCliInstalled, withHookCause } from "../activity.js";
 
 const ENV_KEYS = ["HUB_CONFIG_DIR", "HUB_OPENCODE_DIR", "CORE_APP"];

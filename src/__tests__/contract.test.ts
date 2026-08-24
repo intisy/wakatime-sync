@@ -1,7 +1,7 @@
 // Universal plugin contract (shared across the ecosystem via core's test-kit):
 // the /<plugin>-config CLI round-trips, the slash-commands deploy, and each action
 // command runs cleanly — all in isolated temp homes.
-import { runPluginContract } from "../../core/src/testing.js";
+import { runPluginContract } from "@intisy-ai/core/testing";
 
 runPluginContract({
   name: "wakatime-sync",

@@ -36,6 +36,7 @@
     "build:deps": "npm --prefix core install && npm --prefix core run build"
   },
   "devDependencies": {
+    "@intisy-ai/api": "^1.0.2",
     "@opencode-ai/plugin": "^0.15.30",
     "@types/node": "^20.0.0",
     "esbuild": "^0.25.12",
@@ -43,6 +44,6 @@
     "vitest": "^2.0.0"
   },
   "dependencies": {
-    "@intisy-ai/core": "file:core"
+    "@intisy-ai/core": "^1.1.0"
   }
 }
