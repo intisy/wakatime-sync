@@ -9,3 +9,6 @@ yarn-error.log*
 package-lock.json
 .superpowers/
 docs/
+
+# Generated on the default branch by the release readme job.
+README.md
