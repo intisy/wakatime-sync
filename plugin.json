@@ -7,11 +7,6 @@
   "capabilities": [
     "settings"
   ],
-  "repo": {
-    "role": "WakaTime coding-activity tracking plugin",
-    "category": "plugin",
-    "tech": "typescript"
-  },
   "commands": [
     {
       "name": "wakatime",
@@ -32,5 +27,15 @@
       "hostname": "",
       "hide_project_names": false
     }
+  },
+  "publish": {
+    "generatedReadme": true
+  },
+  "repo": {
+    "role": "WakaTime coding-activity tracking plugin",
+    "category": "plugin",
+    "tech": [
+      "typescript"
+    ]
   }
 }
