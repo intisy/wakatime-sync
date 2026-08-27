@@ -43,6 +43,6 @@
     "vitest": "^2.0.0"
   },
   "dependencies": {
-    "@intisy-ai/core": "^2.0.0"
+    "@intisy-ai/core": "^2.6.0"
   }
 }
