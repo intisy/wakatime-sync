@@ -1,4 +1,4 @@
-import type { Plugin, PluginContext } from "@intisy-ai/api";
+import type { Plugin, PluginContext } from "@intisy/bayonet";
 import type { SettingsCapability } from "@intisy-ai/basekit";
 import { WAKATIME_SETTINGS } from "./settings.js";
 
