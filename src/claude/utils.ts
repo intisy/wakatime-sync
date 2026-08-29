@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { readJson } from "@intisy-ai/core";
+import { readJson } from "@intisy-ai/basekit";
 import { logger } from "../logger.js";
 import { getPluginConfig } from "../config.js";
 import type { Input, State, TranscriptLog } from "./types.js";

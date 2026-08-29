@@ -14,7 +14,7 @@ await build({
   format: "esm",
   target: "node20",
   outfile: "dist/index.js",
-  external: ["@opencode-ai/plugin", "@intisy-ai/core"],
+  external: ["@opencode-ai/plugin", "@intisy-ai/basekit"],
   define: { __WAKATIME_VERSION__: JSON.stringify(pkg.version) },
   logLevel: "info",
 });

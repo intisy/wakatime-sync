@@ -1,5 +1,5 @@
 // What this plugin reports on the shared activity bus, kept out of the hook logic.
-import { emitEvent, TOPICS, withCause } from "@intisy-ai/core";
+import { emitEvent, TOPICS, withCause } from "@intisy-ai/basekit";
 
 const SOURCE = "wakatime-sync";
 

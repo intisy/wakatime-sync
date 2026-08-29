@@ -1,4 +1,4 @@
-import type { CapabilitySchema } from "@intisy-ai/core";
+import type { CapabilitySchema } from "@intisy-ai/basekit";
 
 // What each setting is called and how a surface renders it, beside the values the manifest
 // declares. Data the settings capability answers with.

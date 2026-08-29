@@ -4,7 +4,7 @@ import { createWriteStream } from "node:fs";
 import * as https from "node:https";
 import * as os from "node:os";
 import * as path from "node:path";
-import { ensureDir, readJson, writeJson } from "@intisy-ai/core";
+import { ensureDir, readJson, writeJson } from "@intisy-ai/basekit";
 import { emitCliInstalled } from "./activity.js";
 import { getPluginConfig } from "./config.js";
 import { logger } from "./logger.js";
